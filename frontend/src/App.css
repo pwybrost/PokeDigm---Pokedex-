@@ -1,0 +1,790 @@
+/* --- Global Styles & Game Atmosphere --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  /* CHANGE: Replaced gradient with the new image */
+  background-image: url('./assets/PokeDigm Background.png') !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #f0f4f8;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative; /* Necessary for the overlay below */
+}
+
+/* --- Header & Footer (Unified Glass Style) --- */
+.glass-header, .glass-footer {
+  background: rgba(79, 172, 254, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 40px;
+  text-align: center;
+  user-select: none;
+  color:#000;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto 10px;
+}
+
+.glass-header h1 {
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fffb1d;
+  user-select: none;
+  text-shadow: 0 0 15px rgba(79, 172, 254, 0.8);
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 50px; 
+}
+
+/* --- The Fancy Button Style (Now a Pokeball) --- */
+.fancy-add-btn {
+  /* CHANGE: Reset background and borders to let the Pokeball shine */
+  background: none; 
+  border: none;
+  padding: 0; /* Let the Pokeball handle the 'size' */
+  cursor: pointer;
+  
+  /* Layout: Pushing Pokeball and Text apart a little */
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between Pokeball and 'ADD NEW POKEMON' text */
+  
+  /* Initial subtle glow from PokeDigm UI */
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.3));
+  
+  transition: all 0.4s ease;
+}
+
+/* Specific styling for the Pokeball image inside the button */
+.fancy-add-btn .pokeball-icon {
+  width: 50px;  /* Professional button size */
+  height: 50px;
+  /* CHANGE: Pointing to the specific Pokeball image (image_26.png) */
+  background-image: url('./assets/pokeball logo.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  transition: transform 0.3s ease;
+}
+
+/* Styling for the text next to the Pokeball */
+.fancy-add-btn span.btn-text {
+  color: #fff;
+  font-weight: 900;
+  user-select: none;
+  font-family: 'Segoe UI', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.1rem;
+}
+
+/* --- HOVER EFFECTS --- */
+.fancy-add-btn:hover {
+  /* Increase the PokeDigm blue glow on hover */
+  filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.7));
+}
+
+.fancy-add-btn:hover .pokeball-icon {
+  /* Change: Subtle rotation zoom instead of simple scale, looks premium */
+  transform: scale(1.1) rotate(5deg); 
+}
+
+/* --- Pokemon Grid Layout --- */
+.content-area {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 30px;
+}
+
+/* --- TCG Card Design --- */
+.pokemon-card {
+  aspect-ratio: 63 / 88;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  position: relative; /* CRITICAL for absolute children */
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+  overflow: hidden; 
+  
+  /* Background fix for TCG Templates */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  /* We remove Flexbox centering because we are using absolute positioning for the image/name */
+  display: block; 
+}
+
+.pokemon-card:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(79, 172, 254, 0.3);
+  border-color: #00f2fe;
+}
+
+
+/* Pokemon Image Placement (Targeting the white box area of the TCG template) */
+/* Position the Pokémon perfectly in the white center box */
+.pokemon-card img {
+  position: absolute;
+  top: 18%; /* Moves it up into the white box area */
+  left: 50%;
+  transform: translateX(-50%); /* Keeps it horizontally centered */
+  width: auto;
+  height: 35%; /* Adjusts size to fit the white box height */
+  object-fit: contain;
+  transition: transform 0.4s ease-out;
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,0.4));
+  z-index: 2;
+}
+
+/* Ensure the hover zoom stays centered */
+.pokemon-card:hover img {
+  transform: translateX(-50%) scale(1.2);
+}
+
+.pokemon-card::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+  pointer-events: none;
+}
+
+.pokemon-card:hover::after {
+  transform: translateX(100%);
+}
+
+/* Pokemon Name Placement (Moving text to the empty description box at the bottom) */
+/* Move the name up into the golden bar */
+.card-name-container {
+  position: absolute;
+  bottom: 23%; /* Changed from 12% to 23% to move it UP */
+  width: 100%;
+  padding: 0 10px;
+  text-align: center;
+  z-index: 3;
+}
+
+.card-name {
+  color: #222; /* Dark text for the light golden bar */
+  font-family: 'Franklin Gothic Medium', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+/* --- Modal & Scroll System --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Change from 'center' to 'flex-start' */
+  padding: 40px 0;         /* Adds space at the top and bottom when scrolling */
+  overflow-y: auto;        /* This enables the scroll wheel */
+  z-index: 1000;
+}
+
+.modal-card {
+  background: transparent; /* Remove the blue gradient when showing the Pokedex */
+  border: none;
+  padding: 0; /* Remove padding so the Pokedex background can touch the edges */
+  width: 90vw; /* Make it wide and rectangular */
+  max-width: 1200px;
+  height: 80vh;
+  position: relative;
+  overflow: visible; /* Allow the header to sit properly */
+}
+
+/* --- THE WINDOW CONTAINER --- */
+.modal-card.form-variant {
+  /* Swapping the gradient for your pattern image */
+  background-image: url('./assets/Custom Pokemon BG.png') !important;
+  background-size: cover;
+  background-position: center;
+  
+  border: 1px solid rgba(0, 242, 254, 0.4) !important;
+  padding: 40px !important;
+  width: 95% !important;
+  max-width: 460px !important;
+  height: auto !important; 
+  min-height: min-content;
+  border-radius: 24px !important;
+  display: block !important;
+  margin-bottom: 20px;
+  
+  /* Restoring the premium white/blue glow from your screenshot */
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.2), 0 0 20px rgba(79, 172, 254, 0.4) !important;
+}
+
+/* --- THE INPUT FIELDS --- */
+.modal-card.form-variant input,
+.modal-card.form-variant textarea
+.modal-card.form-variant select {
+  /* Semi-transparent dark background so the pattern shows through slightly */
+  background-color: rgba(10, 20, 34, 0.8) !important; 
+  color: white !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.modal-card.form-variant h2, 
+.modal-card.form-variant h1,
+.modal-card.form-variant .modal-title {
+  color: #000000 !important; /* Forces the text to black */
+  font-weight: 800;
+  text-shadow: none; /* Removes any white glow that might make it blurry */
+  margin-bottom: 20px;
+}
+
+.modal-card.form-variant label,
+.modal-card.form-variant .field-label,
+.modal-card.form-variant p {
+  color: #000000 !important; /* Forces text to black */
+  font-weight: 700;          /* Makes it bold so it's readable over the pattern */
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 5px;
+  text-shadow: none !important; /* Removes any blue glow/shadow */
+}
+
+/* Also changing the 'X' close button to black so it's visible on the yellow */
+.modal-card.form-variant .close-modal {
+  color: #000000 !important;
+}
+
+/* --- THE ACTION BUTTONS (Restoring the Blue PokéDigm Look) --- */
+/* This targets the "Add Pokémon" button */
+.modal-card.form-variant button[type="submit"],
+.modal-card.form-variant .add-pokemon-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  color: #0a1422 !important; /* Dark text for contrast */
+  font-weight: 800;
+  text-transform: uppercase;
+  border: none !important;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-top: 25px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 10px rgba(79, 172, 254, 0.8));
+  transition: transform 0.2s ease;
+}
+
+.modal-card.form-variant button[type="submit"]:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 15px rgba(79, 172, 254, 1));
+}
+
+/* This targets the "CANCEL" text button */
+.modal-card.form-variant .cancel-btn {
+  background: transparent !important;
+  color: rgb(0, 0, 0) !important;
+  font-weight: bolder;
+  border: none !important;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 15px;
+  opacity: 0.8;
+}
+
+.modal-card.form-variant .cancel-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* DROPDOWN OPTIONS */
+.modal-card.form-variant select option {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* CLOSE 'X' BUTTON */
+.modal-card.form-variant .close-modal {
+  color: rgb(0, 0, 0) !important;
+  opacity: 1 !important;
+  font-size: 32px;
+}
+
+/* --- PokeDigm Detail Panel --- */
+.detail-panel {
+  position: relative;
+  background-image: url('./assets/PokeDigm Pokedex UI.jpg') !important;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  padding: 40px 20px 20px 20px;
+  overflow-y: auto;
+  max-height: 90vh;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Red Header Accent */
+.red-accent-bar {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 12px;
+  background-color: #ff0000;
+  border-radius: 20px 20px 0 0;
+}
+
+.header-title {
+  color: #000;
+  font-family: 'Arial Black', sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+/* Grid Layout: Left | Center | Right */
+.pokedigm-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Stylish Black Text */
+.stylish-text, .section-label, .stylish-list li, .pokemon-name-title {
+  color: #000 !important;
+  font-weight: 600;
+  text-shadow: 0 0 1px rgba(255,255,255,0.5);
+}
+
+.pokemon-name-title {
+  font-size: 2rem;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #000;
+}
+
+/* Center Logo Area */
+.center-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.pokeball-inner-circle {
+  width: 220px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* This aligns specifically with the pokeball circle in your background image */
+}
+
+.logo-main-img {
+  width: 140px;
+  height: auto;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+}
+
+.sprite-grid {
+  display: flex;
+  gap: 5px;
+}
+
+.sprite-grid img {
+  width: 60px;
+}
+
+/* Stylish List Bullets */
+.stylish-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.stylish-list li::before {
+  content: "• ";
+  color: #ff0000;
+}
+
+.custom-audio {
+  width: 100%;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.pd-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+/* --- THE FULL RECTANGULAR WRAPPER --- */
+/* This replaces pd-modal-square to cover the entire blue background */
+/* --- THE FULL RECTANGULAR WRAPPER --- */
+.pd-modal-wrapper {
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/PokeDigm Pokedex UI.jpg') !important; 
+  background-size: 100% 100%; /* Stretch to fill the entire rectangle */
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  overflow: hidden; 
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+/* THE BIGGER RED HEADER - Spans the full width of the rectangle */
+.pd-header-large {
+  position: relative;
+  padding: 10px 40px; 
+  background: linear-gradient(to bottom, #ff0000 0%, #cc0000 100%);
+  border-bottom: 5px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pd-header-title {
+  color: #000; 
+  font-family: 'Arial Black', sans-serif;
+  font-size: 2.5rem; /* Larger font for the wider header */
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 0;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
+}
+
+/* White accents from reference */
+.pd-header-large::after {
+  content: "";
+  position: absolute;
+  right: 25px;
+  top: 35%;
+  width: 50px;
+  height: 15px;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid #333;
+  box-shadow: -60px 0 0 -2px white, -60px 0 0 0 #333;
+}
+
+.pd-close-btn {
+  position: absolute;
+  top: 15px; right: 20px;
+  color: #fff;
+  font-size: 2.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 100; /* Keeps your new close button on top */
+}
+
+/* --- CONTENT AREA: Grid Layout --- */
+.pd-content-square {
+  display: grid;
+  grid-template-columns: 1.2fr auto 1.2fr; /* [Info] [Center Logo] [Stats/Cries] */
+  gap: 20px;
+  padding: 30px;
+  overflow-y: auto; /* Keeps the square scrollable if needed */
+  flex-grow: 1; /* Fills remaining square space */
+}
+
+/* Global data color to force black readability */
+.pd-content-square p, .pd-content-square strong, .pd-content-square li {
+  color: #000 !important;
+  font-family: 'Courier New', monospace;
+  font-weight: 800; /* Extra bold for readability */
+}
+
+.pd-label { font-weight: bold; }
+.pd-value { color: #000; }
+
+.pd-pokemon-name {
+  color: #000 !important;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 3rem;
+  text-transform: capitalize;
+  margin-top: 0;
+  border-bottom: 4px solid #000;
+}
+
+.pd-column { display: flex; flex-direction: column; gap: 15px; }
+.pd-section-title { font-weight: bold; text-transform: uppercase; font-size: 1rem; margin: 0; }
+
+/* Stylish List with red bullets */
+.pd-stylish-list { list-style: none; padding-left: 0; }
+.pd-stylish-item::before { content: '➢ '; color: #ff0000; }
+
+/* Stats list density */
+.pd-stats-list { list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 5px; }
+.pd-stat-item { display: flex; justify-content: space-between; }
+
+/* --- CENTER LOGO & GALLERY GRID --- */
+.pd-column-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 100px;
+}
+
+.pd-central-logo-container {
+  width: 250px;
+  height: 250px;
+  /* This aligns specifically over the Pokeball area in your background image */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Displays ALL images in a professional gallery grid */
+.pd-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%; height: 100%;
+}
+
+.pd-gallery-img {
+  width: 100%; height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+}
+
+/* Main art takes the full top row */
+.pd-main-art {
+  width: 220px; /* Larger art for rectangular view */
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+}
+/* Sprites are smaller in the bottom rows */
+.pd-sprite-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.pd-sprite {
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid #000;
+  border-radius: 10px;
+}
+.pd-shiny { border: 2px solid #ff0000; /* Highlight shiny forms */ }
+
+.card-name-container {
+  display: flex !important;
+  justify-content: center !important; /* Center horizontally */
+  align-items: flex-end !important;    /* Push text to the bottom of the container */
+  
+  /* Give it a fixed height and position it relative to the card bottom */
+  height: 40px !important;            
+  width: 100% !important;
+  position: absolute;
+  
+  /* ADJUST THIS: Increase this number to move text LOWER */
+  bottom: 55px !important; 
+  
+  left: 0;
+  padding-bottom: 5px !important; /* Fine-tune the vertical seat of the text */
+  box-sizing: border-box;
+}
+
+.card-name {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 13px; /* Slightly smaller to match the hardcoded style better */
+  color: #000; 
+  line-height: 1 !important;
+  letter-spacing: 0.5px;
+}
+/* THE FUNCTIONAL CLOSE BUTTON */
+.pd-close-pokedex {
+  position: absolute;
+  right: 25px; /* Matches the position in your screenshot */
+  top: 50%;
+  transform: translateY(-50%);
+  
+  /* Matches the shape of the white capsule in the Pokedex UI */
+  width: 60px;
+  height: 25px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 2px solid #333;
+  
+  /* Text / X Styling */
+  color: #000;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 110;
+}
+
+/* HOVER EFFECT */
+.pd-close-pokedex:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.pd-close-pokedex:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* Audio/Action styles */
+.pd-custom-audio { width: 100%; height: 40px; margin-top: 10px; }
+.pd-cry-accent { color: #ff0000; font-weight: bold; }
+.pd-action-buttons { display: flex; gap: 15px; margin-top: auto; padding-top: 20px; }
+.pd-edit-btn, .pd-delete-btn { flex-grow: 1; padding: 10px; font-weight: bold; cursor: pointer; }
+.pd-edit-btn { background-color: #ffe082; color: #000; }
+.pd-delete-btn { background-color: #ff5252; color: #fff; }
+
+/* Custom scrollbar styling */
+.modal-card::-webkit-scrollbar { width: 8px; }
+.modal-card::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+.modal-card::-webkit-scrollbar-thumb { background: #4facfe; border-radius: 10px; }
+
+/* --- Form Specifics --- */
+.form-modal {
+  width: 95%;
+  max-width: 460px;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+}
+
+.form-modal h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.6rem;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+  padding-bottom: 10px;
+}
+
+.pokemon-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pokemon-form input, .pokemon-form textarea, .fancy-select {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 14px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.pokemon-form input:focus, .fancy-select:focus {
+  border-color: #00f2fe;
+}
+
+/* Custom styles for the type label in form */
+.card-type-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+  color: #4facfe;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.cancel-btn {
+  background: transparent;
+  color: #8a9bbd;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2.2rem;
+  cursor: pointer;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { 
+  from { transform: translateY(60px); opacity: 0; } 
+  to { transform: translateY(0); opacity: 1; } 
+}
+
+.glass-footer {
+  margin-top: 40px;
+}
+
