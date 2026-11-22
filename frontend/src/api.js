@@ -1,5 +1,5 @@
 const POKE_API = 'https://pokeapi.co/api/v2';
-const BACKEND_API = 'http://localhost:5000/api';
+const BACKEND_API = '/api';
 
 export async function fetchApiPokemonList() {
   const res = await fetch(`${POKE_API}/pokemon?limit=30`);
